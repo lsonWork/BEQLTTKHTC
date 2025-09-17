@@ -1,10 +1,11 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Document } from 'src/document/entities/document.entity';
 
 @Entity()
 export class Account {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ unique: true })
   username: string;
@@ -18,4 +19,7 @@ export class Account {
 
   @Column()
   status: boolean;
+
+  @OneToMany(() => Document, (document) => document.account)
+  documents: Document[];
 }
