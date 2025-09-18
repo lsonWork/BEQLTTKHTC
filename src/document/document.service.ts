@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Document } from './entities/document.entity';
 import { Repository } from 'typeorm';
 import { Account } from 'src/account/entities/account.entity';
+import { UpdateDocumentDTO } from './DTO/UpdateDocumentDTO';
 
 @Injectable()
 export class DocumentService {
@@ -23,6 +24,7 @@ export class DocumentService {
     }
     const newDocument = this.documentRepository.create(document);
     newDocument.account = author;
+    newDocument.createdAt = new Date();
 
     try {
       return await this.documentRepository.save(newDocument);
@@ -38,6 +40,75 @@ export class DocumentService {
     }
     try {
       await this.documentRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findAll(page: number, limit: number, cif?: string) {
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await this.documentRepository.findAndCount({
+      skip,
+      take: limit,
+      order: { id: 'ASC' },
+      relations: ['account'],
+      where: { cif },
+      select: {
+        id: true,
+        name: true,
+        content: true,
+        cif: true,
+        createdAt: true,
+        account: {
+          id: true,
+          username: true, // chỉ lấy id, username
+        },
+      },
+    });
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  async getById(id: number) {
+    const document = await this.documentRepository.findOne({
+      where: { id },
+      relations: ['account'],
+      select: {
+        id: true,
+        name: true,
+        content: true,
+        cif: true,
+        createdAt: true,
+        account: {
+          id: true,
+          username: true, // chỉ lấy id, username
+        },
+      },
+    });
+    if (!document) {
+      throw new HttpException('Document not found', 404);
+    }
+    return document;
+  }
+
+  async update(id: number, updateData: UpdateDocumentDTO) {
+    const document = await this.documentRepository.findOne({ where: { id } });
+    if (!document) {
+      throw new HttpException('Document not found', 404);
+    }
+    const newDocument = this.documentRepository.create({
+      ...document,
+      ...updateData,
+    });
+    try {
+      return await this.documentRepository.save(newDocument);
     } catch (error) {
       throw error;
     }

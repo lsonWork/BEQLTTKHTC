@@ -9,6 +9,10 @@ export class CreateDocumentDTO {
   @IsNotEmpty()
   content: string;
 
+  @IsString()
+  @IsNotEmpty()
+  cif: string;
+
   @IsNumber()
   @IsNotEmpty()
   accountId: number;

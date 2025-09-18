@@ -6,11 +6,17 @@ export class Document {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  cif: string;
+
   @Column({ unique: true })
   name: string;
 
   @Column({ type: 'text' })
   content: string;
+
+  @Column()
+  createdAt: Date;
 
   @ManyToOne(() => Account, (account) => account.documents)
   account: Account;

@@ -17,7 +17,7 @@ export class AuthService {
 
   async login(loginDTO: LoginDTO) {
     const user = await this.accountRepository.findOne({
-      where: { username: loginDTO.username },
+      where: { username: loginDTO.username, status: true },
     });
     if (!user) {
       throw new HttpException('User not found', 404);
@@ -37,6 +37,7 @@ export class AuthService {
       user: {
         id: user.id,
         username: user.username,
+        role: user.role,
         status: user.status,
       },
     };

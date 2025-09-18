@@ -78,6 +78,7 @@ export class AccountService {
       skip,
       take: limit,
       order: { id: 'ASC' },
+      select: ['id', 'username', 'role', 'status'],
     });
 
     return {
