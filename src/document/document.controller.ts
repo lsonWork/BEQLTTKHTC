@@ -15,9 +15,10 @@ import { UpdateDocumentDTO } from './DTO/UpdateDocumentDTO';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/decorators/role.decorator';
+import { ActiveAccountGuard } from 'src/guards/active-account.guard';
 
 @Controller('document')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard, ActiveAccountGuard)
 @Roles('user')
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
@@ -38,7 +39,6 @@ export class DocumentController {
     @Query('limit') limit: number = 10,
     @Query('cif') cif?: string,
   ) {
-    console.log(page, limit, cif);
     return await this.documentService.findAll(page, limit, cif);
   }
 

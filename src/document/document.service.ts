@@ -15,6 +15,9 @@ export class DocumentService {
     private accountRepository: Repository<Account>,
   ) {}
   async create(document: CreateDocumentDTO) {
+    if (!document.cif || document.cif.trim().length === 0) {
+      throw new HttpException('CIF cannot be empty', 400);
+    }
     const author = await this.accountRepository.findOne({
       where: { id: document.accountId },
       select: ['id', 'username'],
