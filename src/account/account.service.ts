@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CreateAccountDTO } from './DTO/CreateAccountDTO';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { ILike, Like, Repository } from 'typeorm';
 import { Account } from './entities/account.entity';
 import * as bcrypt from 'bcrypt';
 import { UpdateAccountDTO } from './DTO/UpdateAccountDTO';
@@ -70,7 +70,7 @@ export class AccountService {
     };
 
     if (username) {
-      where.username = Like(`%${username}%`);
+      where.username = ILike(`%${username}%`);
     }
 
     const [data, total] = await this.accountRepository.findAndCount({

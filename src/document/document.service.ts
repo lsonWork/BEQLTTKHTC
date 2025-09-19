@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateDocumentDTO } from './DTO/CreateDocumentDTO';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Document } from './entities/document.entity';
-import { Repository } from 'typeorm';
+import { ILike, Like, Repository } from 'typeorm';
 import { Account } from 'src/account/entities/account.entity';
 import { UpdateDocumentDTO } from './DTO/UpdateDocumentDTO';
 
@@ -48,12 +48,18 @@ export class DocumentService {
   async findAll(page: number, limit: number, cif?: string) {
     const skip = (page - 1) * limit;
 
+    const where: any = {};
+
+    if (cif) {
+      where.cif = ILike(`%${cif}%`);
+    }
+
     const [data, total] = await this.documentRepository.findAndCount({
       skip,
       take: limit,
-      order: { id: 'ASC' },
+      order: { createdAt: 'DESC' },
       relations: ['account'],
-      where: { cif },
+      where,
       select: {
         id: true,
         name: true,
@@ -88,7 +94,7 @@ export class DocumentService {
         createdAt: true,
         account: {
           id: true,
-          username: true, // chỉ lấy id, username
+          username: true,
         },
       },
     });

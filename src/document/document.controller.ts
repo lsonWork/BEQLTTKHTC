@@ -6,12 +6,19 @@ import {
   Param,
   Patch,
   Post,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { CreateDocumentDTO } from './DTO/CreateDocumentDTO';
 import { UpdateDocumentDTO } from './DTO/UpdateDocumentDTO';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/guards/role.guard';
+import { Roles } from 'src/decorators/role.decorator';
 
 @Controller('document')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('user')
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
@@ -27,10 +34,11 @@ export class DocumentController {
 
   @Get()
   async getAll(
-    @Body() page: number = 1,
-    @Body() limit: number = 10,
-    @Body() cif?: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('cif') cif?: string,
   ) {
+    console.log(page, limit, cif);
     return await this.documentService.findAll(page, limit, cif);
   }
 
