@@ -20,7 +20,6 @@ export class ActiveAccountGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    console.log(user);
 
     if (!user) {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
