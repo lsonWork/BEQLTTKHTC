@@ -36,7 +36,7 @@ export class DocumentService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const document = await this.documentRepository.findOne({ where: { id } });
     if (!document) {
       throw new HttpException('Document not found', 404);
@@ -85,7 +85,7 @@ export class DocumentService {
     };
   }
 
-  async getById(id: number) {
+  async getById(id: string) {
     const document = await this.documentRepository.findOne({
       where: { id },
       relations: ['account'],
@@ -107,7 +107,7 @@ export class DocumentService {
     return document;
   }
 
-  async update(id: number, updateData: UpdateDocumentDTO) {
+  async update(id: string, updateData: UpdateDocumentDTO) {
     const document = await this.documentRepository.findOne({ where: { id } });
     if (!document) {
       throw new HttpException('Document not found', 404);
