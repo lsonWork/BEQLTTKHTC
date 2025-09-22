@@ -13,7 +13,7 @@ export class CreateDocumentDTO {
   @IsNotEmpty()
   cif: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  accountId: number;
+  accountId: string;
 }

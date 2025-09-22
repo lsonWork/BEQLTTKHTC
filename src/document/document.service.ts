@@ -19,7 +19,7 @@ export class DocumentService {
       throw new HttpException('CIF cannot be empty', 400);
     }
     const author = await this.accountRepository.findOne({
-      where: { id: document.accountId },
+      where: { id: document.accountId.toString() },
       select: ['id', 'username'],
     });
     if (!author) {
@@ -36,10 +36,19 @@ export class DocumentService {
     }
   }
 
-  async delete(id: string) {
-    const document = await this.documentRepository.findOne({ where: { id } });
+  async delete(id: string, accountId: string) {
+    const document = await this.documentRepository.findOne({
+      where: { id },
+      relations: ['account'],
+    });
     if (!document) {
       throw new HttpException('Document not found', 404);
+    }
+    if (document.account.id !== accountId) {
+      throw new HttpException(
+        'You are not authorized to delete this document',
+        403,
+      );
     }
     try {
       await this.documentRepository.delete(id);

@@ -4,7 +4,7 @@ import { Role } from 'src/enum/Role';
 
 // Định nghĩa type user lấy từ JWT validate
 export interface JwtUser {
-  userId: string;
+  id: string;
   fullName: string;
   email: string;
   role: Role;

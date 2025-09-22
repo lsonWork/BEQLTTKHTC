@@ -4,8 +4,8 @@ import { Document } from 'src/document/entities/document.entity';
 
 @Entity()
 export class Account {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ unique: true })
   username: string;

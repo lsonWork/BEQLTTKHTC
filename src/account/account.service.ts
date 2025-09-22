@@ -36,7 +36,7 @@ export class AccountService {
 
   async update(id: string, accountDTO: UpdateAccountDTO) {
     const updateAccount = await this.accountRepository.findOne({
-      where: { id: parseInt(id) },
+      where: { id },
     });
     if (!updateAccount) {
       throw new HttpException('Account not found', 404);
@@ -77,7 +77,6 @@ export class AccountService {
       where,
       skip,
       take: limit,
-      order: { id: 'ASC' },
       select: ['id', 'username', 'role', 'status'],
     });
 

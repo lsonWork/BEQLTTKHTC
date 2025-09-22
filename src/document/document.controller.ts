@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
@@ -16,6 +17,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/decorators/role.decorator';
 import { ActiveAccountGuard } from 'src/guards/active-account.guard';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import type { JwtUser } from 'src/decorators/get-user.decorator';
 
 @Controller('document')
 @UseGuards(AuthGuard('jwt'), RolesGuard, ActiveAccountGuard)
@@ -29,8 +32,8 @@ export class DocumentController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return await this.documentService.delete(id);
+  async delete(@Param('id') id: string, @GetUser() user: JwtUser) {
+    return await this.documentService.delete(id, user.id);
   }
 
   @Get()

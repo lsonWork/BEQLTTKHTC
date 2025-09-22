@@ -1,5 +1,11 @@
 import { Account } from 'src/account/entities/account.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Document {
@@ -19,5 +25,6 @@ export class Document {
   createdAt: Date;
 
   @ManyToOne(() => Account, (account) => account.documents)
+  @JoinColumn({ name: 'account_id' })
   account: Account;
 }
